@@ -195,8 +195,8 @@ export const writeInputObjectType = (
         });
       });
     })
-    .conditionalWrite(!writeExtendedWhereUniqueInput, `).strict();`)
-    .conditionalWrite(writeExtendedWhereUniqueInput, `).strict());`);
+    .conditionalWrite(!writeExtendedWhereUniqueInput, `);`)
+    .conditionalWrite(writeExtendedWhereUniqueInput, `));`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer.blankLine().writeLine(`export default ${inputType.name}Schema;`);

@@ -45,7 +45,7 @@ export const writeInclude = (
         }
       });
     })
-    .write(`).strict()`);
+    .write(`)`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer.blankLine().writeLine(`export default ${model.name}IncludeSchema;`);

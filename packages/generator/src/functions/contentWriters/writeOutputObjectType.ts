@@ -127,7 +127,7 @@ export const writeOutputObjectType = (
         writer.newLine();
       });
     })
-    .write(`).strict()`);
+    .write(`)`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer.blankLine().writeLine(`export default ${field.argName}Schema;`);

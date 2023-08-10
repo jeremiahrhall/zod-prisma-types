@@ -32,7 +32,7 @@ export const writeCountSelect = (
         }
       });
     })
-    .write(`).strict();`);
+    .write(`);`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer
