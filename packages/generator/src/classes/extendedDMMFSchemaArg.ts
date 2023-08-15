@@ -6,7 +6,9 @@ import { FormattedNames } from './formattedNames';
 
 export interface ExtendedDMMFSchemaArgOptions
   extends DMMF.SchemaArg,
-    ZodValidatorOptions {}
+    ZodValidatorOptions {
+  isInRelationMap: boolean;
+}
 
 export interface ZodValidatorOptions {
   zodValidatorString?: string;
@@ -39,6 +41,7 @@ export class ExtendedDMMFSchemaArg
   readonly isJsonType: boolean;
   readonly isBytesType: boolean;
   readonly isDecimalType: boolean;
+  readonly isInRelationMap: boolean;
   readonly linkedField?: ExtendedDMMFField;
 
   constructor(
@@ -47,6 +50,12 @@ export class ExtendedDMMFSchemaArg
     linkedField?: ExtendedDMMFField,
   ) {
     super(arg.name);
+    // if (
+    //   !arg.isInRelationMap &&
+    //   arg.inputTypes.some((it) => it.type.toString().includes('Nested'))
+    // ) {
+    //   console.log('arg', arg);
+    // }
     this.generatorConfig = generatorConfig;
     this.name = arg.name;
     this.comment = arg.comment;
@@ -65,8 +74,9 @@ export class ExtendedDMMFSchemaArg
     this.isBytesType = this._setIsBytesType();
     this.isDecimalType = this._setIsDecimalType();
     this.linkedField = linkedField;
+    this.isInRelationMap = arg.isInRelationMap;
   }
-
+  // TODO possible relation map impact
   private _setInputTypes = (inputTypes: DMMF.SchemaArgInputType[]) => {
     // filter "null" from the inputTypes array to prevent the generator
     // from generating a union type with "null" and the actual field type

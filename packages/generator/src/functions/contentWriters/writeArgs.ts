@@ -54,7 +54,7 @@ export const writeArgs = (
           `include: z.lazy(() => ${model.name}IncludeSchema).optional(),`,
         );
     })
-    .write(`);`);
+    .write(`).describe('${model.name}ArgsSchema');`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer.blankLine().writeLine(`export default ${model.name}ArgsSchema;`);

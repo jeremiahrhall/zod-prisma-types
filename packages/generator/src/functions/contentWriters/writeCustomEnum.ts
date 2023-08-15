@@ -21,7 +21,7 @@ export const writeCustomEnum = (
     writer.write(`'${value.name}'${writeComma ? ',' : ''}`);
   });
   writer
-    .write(`]);`)
+    .write(`]).describe('${name}Schema');`)
     .blankLine()
     .writeLine(
       `export type ${name}Type = \`\${z.infer<typeof ${name}Schema>}\``,

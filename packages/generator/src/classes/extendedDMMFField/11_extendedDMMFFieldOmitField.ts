@@ -79,7 +79,8 @@ export class ExtendedDMMFFieldOmitField extends ExtendedDMMFFieldArrayValidatorS
 
   // PUBLIC
   // ----------------------------------------------
-
+  
+  // TODO concept like this for relation map modeling on fields
   omitInModel() {
     return this.zodOmitField === 'model' || this.zodOmitField === 'all';
   }

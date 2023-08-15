@@ -112,7 +112,7 @@ export const writeModelOrType = (
         });
       });
     })
-    .write(`)`);
+    .write(`).describe('${model.name}Schema')`);
 
   writer
     .blankLine()
@@ -173,7 +173,7 @@ export const writeModelOrType = (
           });
         });
       })
-      .write(`))`);
+      .write(`)).describe('${model.name}OptionalDefaultsSchema')`);
 
     writer
       .blankLine()
@@ -246,7 +246,7 @@ export const writeModelOrType = (
           writeRelation({ writer, field });
         });
       })
-      .write(`))`);
+      .write(`)).describe('${model.name}WithRelationsSchema')`);
     // .blankLine();
   }
 
@@ -319,7 +319,7 @@ export const writeModelOrType = (
           });
         });
       })
-      .write(`))`);
+      .write(`)).describe('${model.name}OptionalDefaultsWithRelationsSchema')`);
     // .blankLine();
   }
 
@@ -390,7 +390,9 @@ export const writeModelOrType = (
           writeRelation({ writer, field, isPartial: true });
         });
       })
-      .write(`)).partial()`);
+      .write(
+        `)).partial().describe('${model.name}PartialWithRelationsSchema')`,
+      );
 
     // WRITE OPTIONAL DEFAULTS PARTIAL RELATION VALUE TYPES
     // -------------------------------------------
@@ -432,7 +434,9 @@ export const writeModelOrType = (
             });
           });
         })
-        .write(`).partial())`);
+        .write(
+          `).partial()).describe('${model.name}OptionalDefaultsWithPartialRelationsSchema');`,
+        );
     }
 
     // WRITE PARTIAL RELATION VALUE TYPES
@@ -475,7 +479,9 @@ export const writeModelOrType = (
             });
           });
         })
-        .write(`).partial())`);
+        .write(
+          `).partial()).describe('${model.name}WithPartialRelationsSchema')`,
+        );
     }
   }
 

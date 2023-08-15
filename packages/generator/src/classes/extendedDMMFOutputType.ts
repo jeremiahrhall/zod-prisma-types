@@ -65,6 +65,7 @@ export class ExtendedDMMFOutputType
    * - Returns the fields that are in the `PRISMA_ACTION_ARRAY` if the fieldCategory is set to `PRISMA_ACTION`.
    * - Returns all fields that are not in `PRISMA_ACTION_ARRAY` if the fieldCategory is set to `OTHER_FIELDS`.
    */
+  // TODO make this respect relation map
   private _setFields(
     fields: DMMF.SchemaField[],
     datamodel: ExtendedDMMFDatamodel,
@@ -165,6 +166,7 @@ export class ExtendedDMMFOutputType
    * @returns true if the output type has fields that are relations to other models
    */
   hasRelationField() {
+    // TODO extend this filter to respect relation map / config
     return this.fields.some(
       (field) => field.outputType.location === 'outputObjectTypes',
     );

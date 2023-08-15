@@ -1,3 +1,4 @@
+import { inputTypesNotInRelationMap } from './typeInRelationMap';
 import {
   writeCustomEnum,
   writeDecimalJsLike,
@@ -159,11 +160,12 @@ export const writeInputTypeFiles: CreateFiles = ({ path, dmmf }) => {
     ////////////////////////////////////////////////////
     // WRITE INPUT TYPE FILES
     ////////////////////////////////////////////////////
-
+    const typesNotInMap = inputTypesNotInRelationMap(dmmf);
     dmmf.schema.inputObjectTypes.prisma.forEach((inputType) => {
       new FileWriter().createFile(
         `${folderPath}/${inputType.name}Schema.ts`,
-        (fileWriter) => writeInputObjectType({ fileWriter, dmmf }, inputType),
+        (fileWriter) =>
+          writeInputObjectType({ fileWriter, dmmf }, inputType, typesNotInMap),
       );
     });
   }

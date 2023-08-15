@@ -28,7 +28,7 @@
   "scripts": {
     "lint": "eslint --ext ts,tsx,js,jsx --fix .",
     "test": "vitest",
-    "build": "tsc",
+    "build": "tsc && chmod +x ./dist/bin.js",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
   },
   "devDependencies": {

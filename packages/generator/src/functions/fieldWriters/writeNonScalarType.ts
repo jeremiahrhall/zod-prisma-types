@@ -17,7 +17,7 @@ import { WriteTypeFunction, WriteTypeOptions } from '../../types';
  */
 export const writeNonScalarType: WriteTypeFunction<WriteTypeOptions> = (
   writer,
-  { inputType, isOptional, isNullable, writeLazy = true, writeComma = true },
+  { inputType, isOptional, isNullable, writeLazy = true, writeComma = true }, // TODO add pick
 ) => {
   const nonScalarType = inputType.getZodNonScalarType();
   if (!nonScalarType) return;

@@ -25,7 +25,7 @@ export const writeInputJsonValue = ({
         .writeLine(`z.lazy(() => z.array(InputJsonValue.nullable())),`)
         .writeLine(`z.lazy(() => z.record(InputJsonValue.nullable())),`);
     })
-    .write(`]);`)
+    .write(`]).describe('InputJsonValue');`)
     .blankLine()
     .writeLine(
       `export type InputJsonValueType = z.infer<typeof InputJsonValue>;`,

@@ -22,7 +22,9 @@ export const writeNullableJsonValue = ({
           `.union([JsonValue, z.literal('DbNull'), z.literal('JsonNull')])`,
         )
         .writeLine('.nullable()')
-        .writeLine(`.transform((v) => transformJsonNull(v));`);
+        .writeLine(
+          `.transform((v) => transformJsonNull(v)).describe('NullableJsonValue');`,
+        );
     })
     .blankLine()
     .writeLine(

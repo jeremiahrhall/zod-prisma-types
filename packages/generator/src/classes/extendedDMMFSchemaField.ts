@@ -104,14 +104,19 @@ export class ExtendedDMMFSchemaField
   testOutputType() {
     return this.outputType.namespace === 'model';
   }
-
+  // DONE possible relation map impact?
   private _setArgs({ args }: DMMF.SchemaField) {
     return args.map((arg) => {
       const linkedField = this.linkedModel?.fields.find(
         (field) => field?.name === arg?.name,
       );
-
-      return new ExtendedDMMFSchemaArg(this.generatorConfig, arg, linkedField);
+      // wrong place to handle this, has to be down in the schema arg because the args are things like `where` and `data`
+      // console.log('arg.name, linkedField?.name', arg.name, linkedField?.name);
+      return new ExtendedDMMFSchemaArg(
+        this.generatorConfig,
+        { ...arg, isInRelationMap: true },
+        linkedField,
+      );
     });
   }
 

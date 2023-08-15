@@ -19,6 +19,8 @@ interface WriteInputTypeFieldOptions {
 // WRITER FUNCTION
 /////////////////////////////////////////////
 
+const allowedFieldsForInputTypesNotInRelationMap = ['connect', 'disconnect'];
+
 const writeInputTypeField = ({
   writer,
   field,
@@ -113,6 +115,7 @@ export const writeInputObjectType = (
     getSingleFileContent = false,
   }: ContentWriterOptions,
   inputType: ExtendedDMMFInputType,
+  inputTypesToModify: string[],
 ) => {
   const { useMultipleFiles, addInputTypeValidation } = dmmf.generatorConfig;
 
@@ -122,13 +125,13 @@ export const writeInputObjectType = (
 
   // when an omit field is present, the type is not a native prism type
   // but a zod union of the native type and an omit type
-  const type = inputType.hasOmitFields()
-    ? `z.ZodType<Omit<Prisma.${
-        inputType.name
-      }, ${inputType.getOmitFieldsUnion()}>>`
-    : `z.ZodType<Prisma.${inputType.name}>`;
+  // const type = inputType.hasOmitFields()
+  //   ? `z.ZodType<Omit<Prisma.${
+  //       inputType.name
+  //     }, ${inputType.getOmitFieldsUnion()}>>`
+  //   : `z.ZodType<Prisma.${inputType.name}>`;
 
-  writer.blankLine().write(`export const ${inputType.name}Schema: ${type} = `);
+  writer.blankLine().write(`export const ${inputType.name}Schema = `);
 
   const { extendedWhereUniqueFields } = inputType;
 
@@ -187,6 +190,17 @@ export const writeInputObjectType = (
     .write(`z.object(`)
     .inlineBlock(() => {
       inputType.fields.forEach((field) => {
+        if (inputTypesToModify.includes(inputType.name)) {
+          if (
+            !allowedFieldsForInputTypesNotInRelationMap.includes(field.name)
+          ) {
+            return;
+          }
+        }
+        // TODO where to conditionally write the field
+        // if (!field.isInRelationMap) {
+        //   console.log('field.name', field.name);
+        // }
         writeInputTypeField({
           writer,
           field,
@@ -195,8 +209,14 @@ export const writeInputObjectType = (
         });
       });
     })
-    .conditionalWrite(!writeExtendedWhereUniqueInput, `);`)
-    .conditionalWrite(writeExtendedWhereUniqueInput, `));`);
+    .conditionalWrite(
+      !writeExtendedWhereUniqueInput,
+      `).describe('${inputType.name}Schema');`,
+    )
+    .conditionalWrite(
+      writeExtendedWhereUniqueInput,
+      `)).describe('${inputType.name}Schema');`,
+    );
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer.blankLine().writeLine(`export default ${inputType.name}Schema;`);

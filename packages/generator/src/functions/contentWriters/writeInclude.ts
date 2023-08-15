@@ -45,7 +45,7 @@ export const writeInclude = (
         }
       });
     })
-    .write(`)`);
+    .write(`).describe('${model.name}IncludeSchema');`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer.blankLine().writeLine(`export default ${model.name}IncludeSchema;`);

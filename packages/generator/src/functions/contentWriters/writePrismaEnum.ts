@@ -22,7 +22,7 @@ export const writePrismaEnum = (
 
       writer.write(`'${value}'${writeComma ? ',' : ''}`);
     });
-    writer.write(`]);`);
+    writer.write(`]).describe('${name}Schema');`);
   } else {
     writer
       .conditionalWrite(

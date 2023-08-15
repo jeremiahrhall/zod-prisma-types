@@ -32,7 +32,7 @@ export const writeCountSelect = (
         }
       });
     })
-    .write(`);`);
+    .write(`).describe('${model.name}CountOutputTypeSelectSchema');`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer

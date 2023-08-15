@@ -1,5 +1,11 @@
 import { DMMF } from '@prisma/generator-helper';
 
+import {
+  PRISMA_FUNCTION_TYPES_WITH_VALIDATORS,
+  PRISMA_FUNCTION_TYPES_WITH_VALIDATORS_WHERE_UNIQUE,
+} from '../constants/regex';
+import { GeneratorConfig } from '../schemas';
+import { relationMap } from './RelationMap';
 import { ExtendedDMMFDatamodel } from './extendedDMMFDatamodel';
 import { ExtendedDMMFField } from './extendedDMMFField/extendedDMMFField';
 import { ExtendedDMMFModel } from './extendedDMMFModel';
@@ -8,11 +14,6 @@ import {
   ZodValidatorOptions,
 } from './extendedDMMFSchemaArg';
 import { FormattedNames } from './formattedNames';
-import {
-  PRISMA_FUNCTION_TYPES_WITH_VALIDATORS,
-  PRISMA_FUNCTION_TYPES_WITH_VALIDATORS_WHERE_UNIQUE,
-} from '../constants/regex';
-import { GeneratorConfig } from '../schemas';
 
 const SPLIT_NAME_REGEX =
   /Unchecked|Create|Update|CreateMany|UpdateMany|Upsert|Where|WhereUnique|OrderBy|ScalarWhere|Aggregate|GroupBy/g;
@@ -36,6 +37,7 @@ export class ExtendedDMMFInputType
   readonly isDecimalField: boolean;
   readonly omitFields: string[] = [];
   readonly imports: Set<string>;
+  readonly isInRelationMap: boolean;
   /** @deprecated */
   readonly isWhereUniqueInput?: boolean;
   readonly extendedWhereUniqueFields?: ExtendedDMMFSchemaArg[][];
@@ -61,6 +63,27 @@ export class ExtendedDMMFInputType
     this.extendedWhereUniqueFields = this._setExtendedWhereUniqueFields(
       type.fields,
     );
+    this.isInRelationMap = false;
+    // datamodel.models.some((m) =>
+    //   m.filterdRelationFields.some((f) => {
+    //     if (
+    //       relationMap[m.name] &&
+    //       relationMap[m.name][f.formattedNames.camelCase]
+    //     ) {
+    //       console.log(
+    //         'f.formattedNames.camelCase, f, m',
+    //         f.formattedNames.camelCase,
+    //         f,
+    //         m,
+    //       );
+    //     }
+    //   }),
+    // );
+    // this.isInRelationMap = relationMap[this.linkedModel?.formattedNames.original] &&
+    // relationMap[this.linkedModel?.formattedNames.original][linkedField.name]
+    // if (this.name.includes('CreateNested')) {
+    //   console.log('this', this);
+    // }
   }
 
   /**
@@ -74,7 +97,7 @@ export class ExtendedDMMFInputType
       return model.name === this.name.split(SPLIT_NAME_REGEX)[0];
     });
   }
-
+  // TODO possible relation map impact
   private _setFields(fields: DMMF.SchemaArg[]) {
     // FILTER FIELD REF TYPES
     // -----------------------------------------------
@@ -98,6 +121,15 @@ export class ExtendedDMMFInputType
       const linkedField = this.linkedModel?.fields.find(
         (modelField) => modelField.name === field.name,
       );
+      // if (this.name.includes('CreateNested')) {
+      //   console.log('this, field', this, field, new Error().stack);
+      // }
+      const isInRelationMap = !!(
+        linkedField?.relationName &&
+        this.linkedModel?.formattedNames.original &&
+        relationMap[this.linkedModel?.formattedNames.original] &&
+        relationMap[this.linkedModel?.formattedNames.original][linkedField.name]
+      );
 
       // validators and omitField should only be written for create and update types.
       // this prevents validation in e.g. search queries in "where inputs",
@@ -113,10 +145,9 @@ export class ExtendedDMMFInputType
               zodOmitField: this._getZodOmitField(linkedField),
             }
           : undefined;
-
       return new ExtendedDMMFSchemaArg(
         this.generatorConfig,
-        { ...field, ...optionalValidators },
+        { ...field, ...optionalValidators, isInRelationMap },
         linkedField,
       );
     });
@@ -186,8 +217,8 @@ export class ExtendedDMMFInputType
     const zodImport = "import { z } from 'zod';";
 
     const fieldImports = [
-      prismaImport,
       zodImport,
+      prismaImport,
       ...this.fields.map((field) => field.getImports(this.name)).flat(),
     ];
 
@@ -219,7 +250,7 @@ export class ExtendedDMMFInputType
     combine(0, []);
     return result;
   }
-
+  // TODO possible relation map impact
   private _setExtendedWhereUniqueFields(fields: DMMF.SchemaArg[]) {
     if (!this.constraints.fields || !this.name.includes('WhereUniqueInput')) {
       return undefined;

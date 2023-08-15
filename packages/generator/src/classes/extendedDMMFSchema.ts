@@ -89,8 +89,13 @@ export class ExtendedDMMFSchema implements DMMF.Schema {
     schema: DMMF.Schema,
     datamodel: ExtendedDMMFDatamodel,
   ) {
+    // TODO use this to mark input types as being "in relation map"
     return {
       ...schema.inputObjectTypes,
+      // for this to know that it's in the relation map, we're going to need to check for use elsewhere in the
+      // schema
+
+      // how can I do that?
       prisma: schema.inputObjectTypes.prisma.map(
         (type) =>
           new ExtendedDMMFInputType(this.generatorConfig, type, datamodel),

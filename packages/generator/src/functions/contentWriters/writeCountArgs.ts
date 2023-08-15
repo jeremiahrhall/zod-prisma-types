@@ -41,7 +41,7 @@ export const writeCountArgs = (
         `select: z.lazy(() => ${model.name}CountOutputTypeSelectSchema).nullish(),`,
       );
     })
-    .write(`);`);
+    .write(`).describe('${model.name}CountOutputTypeArgsSchema');`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer

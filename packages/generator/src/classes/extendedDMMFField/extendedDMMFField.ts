@@ -107,6 +107,8 @@ export interface ExtendedDMMFField extends DMMF.Field, FormattedNames {
    * Makes the code more readable when it is in a seperate method.
    */
   isOmitField(): boolean;
+
+  modelName(): string;
 }
 
 /**
@@ -133,4 +135,9 @@ export interface ExtendedDMMFField extends DMMF.Field, FormattedNames {
 
 export class ExtendedDMMFFieldClass
   extends ExtendedDMMFFieldZodType
-  implements ExtendedDMMFField {}
+  implements ExtendedDMMFField
+{
+  modelName(): string {
+    return this._modelName;
+  }
+}

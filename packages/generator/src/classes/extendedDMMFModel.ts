@@ -108,17 +108,18 @@ export class ExtendedDMMFModel extends FormattedNames implements DMMF.Model {
         new ExtendedDMMFFieldClass(field, this.generatorConfig, this.name),
     );
   }
-
+  // TODO possible relation map impact
   private _setScalarFields() {
     return this.fields.filter((field) => field.kind === 'scalar');
   }
-
+  // TODO possible relation map impact
   private _setRelationFields() {
     return this.fields.filter((field) => field.kind === 'object');
   }
 
   // filterd relation fields are relation fields that are not self referencing
   // these are used to create the relation imports in the model
+  // TODO possible relation map impact
   private _setFilteredRelationFields() {
     return this.relationFields.filter((field) => field.type !== this.name);
   }

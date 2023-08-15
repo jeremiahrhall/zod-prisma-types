@@ -67,7 +67,7 @@ export const writeSelect = (
       });
     });
 
-  writer.write(`)`);
+  writer.write(`).describe('${model.name}SelectSchema')`);
 
   if (useMultipleFiles && !getSingleFileContent) {
     writer.blankLine().writeLine(`export default ${model.name}SelectSchema;`);
